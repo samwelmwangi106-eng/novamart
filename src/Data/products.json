@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "iPhone 15 Pro",
+    "category": "Electronics",
+    "price": 1200,
+    "stock": 15,
+    "image": "https://i.pinimg.com/736x/1b/84/76/1b84768e51b73d9dc8c8a9df5e4da218.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Nike Air Max",
+    "category": "Fashion",
+    "price": 150,
+    "stock": 20,
+    "image": "/images/nike.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Johnnie Walker Black Label",
+    "category": "Liquor",
+    "price": 45,
+    "stock": 10,
+    "image": "/images/johnnie.jpg"
+  }
+]
