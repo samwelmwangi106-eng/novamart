@@ -1,9 +1,10 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import ProductsChart from "../Components/ProductsChart";
 import AdminLayout from "../Layouts/AdminLayout";
 import DashboardCard from "../Components/DashboardCard";
 import StatCard from "../Components/StatCard";
 import RecentOrders from "../Components/RecentOrders";
+import InventorySummary from "../Components/InventorySummary";
 
 import productsData from "../Data/products.json";
 import orders from "../Data/orders.json";
@@ -18,13 +19,27 @@ import {
 
 function Dashboard() {
   // Load products from Local Storage if available
-  const [products] = useState(() => {
+  
+  const [products, setProducts] = useState(() => {
     const savedProducts = localStorage.getItem("products");
 
-    return savedProducts
-      ? JSON.parse(savedProducts)
-      : productsData;
+    return savedProducts ? JSON.parse(savedProducts): productsData;
   });
+  useEffect(() => {
+  const handleStorageChange = () => {
+    const savedProducts = localStorage.getItem("products");
+
+    if (savedProducts) {
+      setProducts(JSON.parse(savedProducts));
+    }
+  };
+
+  window.addEventListener("storage", handleStorageChange);
+
+  return () => {
+    window.removeEventListener("storage", handleStorageChange);
+  };
+}, []);
 
   // Dashboard Statistics
   const totalProducts = products.length;
@@ -42,6 +57,10 @@ function Dashboard() {
   const lowStockProducts = products.filter(
     (product) => product.stock < 5
   ).length;
+  const totalCategories = new Set(
+  products.map((product) => product.category)
+).size;
+
 
   return (
     <AdminLayout>
@@ -111,6 +130,18 @@ function Dashboard() {
           value={lowStockProducts}
           color="danger"
         />
+      </div>
+      <InventorySummary
+        totalProducts={totalProducts}
+        totalCategories={totalCategories}
+        totalStock={totalStock}
+        inventoryValue={inventoryValue}
+        lowStockProducts={lowStockProducts}
+      />
+      <div className="mt-4">
+          <ProductsChart
+          products={products}
+          />
       </div>
 
       {/* Recent Orders */}
