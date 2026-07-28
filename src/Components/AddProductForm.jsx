@@ -7,9 +7,11 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
   const [category, setCategory] = useState("Electronics");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     if (initialProduct) {
+      setImage(initialProduct?.image || "");
       setName(initialProduct.name);
       setCategory(initialProduct.category);
       setPrice(String(initialProduct.price));
@@ -19,6 +21,7 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
       setCategory("Electronics");
       setPrice("");
       setStock("");
+      setImage("");
     }
   }, [initialProduct]);
 
@@ -35,6 +38,7 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
       category,
       price: Number(price),
       stock: Number(stock),
+      image,
     };
 
     if (isEditing) {
@@ -86,6 +90,19 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
           value={stock}
           onChange={(event) => setStock(event.target.value)}
         />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Image URL</label>
+        <input 
+        type="text"
+        className="form-control"
+        placeholder="/images/product.jpg"
+        value={image}
+        onChange={(event) => setImage(event.target.value)}
+
+
+        />
+
       </div>
 
       <div className="d-flex gap-2 justify-content-end">

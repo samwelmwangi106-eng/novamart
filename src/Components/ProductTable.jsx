@@ -14,12 +14,14 @@ function ProductTable({ search, category, products, onEdit, onDelete }) {
     <table className="table table-hover align-middle">
       <thead className="table-dark">
         <tr>
+          <th>Image</th>
           <th>ID</th>
           <th>Name</th>
           <th>Category</th>
           <th>Price</th>
           <th>Stock</th>
           <th>Actions</th>
+          
         </tr>
       </thead>
 
@@ -33,11 +35,35 @@ function ProductTable({ search, category, products, onEdit, onDelete }) {
         ) : (
           filteredProducts.map((product) => (
             <tr key={product.id}>
+              <td>
+                <img
+                  src={product.image || "/images/placeholder.png"}
+                  alt={product.name}
+                  className="rounded shadow-sm"
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    objectFit: "cover",
+                    border: "1px solid #dee2e6",
+                  }}
+                />
+              </td>
+  
               <td>{product.id}</td>
               <td>{product.name}</td>
               <td>{product.category}</td>
               <td>${product.price}</td>
-              <td>{product.stock}</td>
+              <td>
+              {product.stock < 5 ? (
+                <span className="badge bg-danger">
+                  {product.stock}
+                </span>
+              ) : (
+                <span className="badge bg-success">
+                  {product.stock}
+                </span>
+              )}
+              </td>
               <td>
                 <button
                   className="btn btn-warning btn-sm me-2"
