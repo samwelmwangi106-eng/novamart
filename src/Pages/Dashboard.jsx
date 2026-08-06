@@ -9,6 +9,8 @@ import InventorySummary from "../Components/InventorySummary";
 import productsData from "../Data/products.json";
 import orders from "../Data/orders.json";
 import users from "../Data/users.json";
+import DashboardActions from "../Components/DashboardActions";
+import { useNavigate } from "react-router-dom";
 
 import {
   FaBox,
@@ -60,11 +62,69 @@ function Dashboard() {
   const totalCategories = new Set(
   products.map((product) => product.category)
 ).size;
+  
+const navigate = useNavigate();
 
+//Navigate to Products page 
+function handleAddProduct(){
+  navigate("/products")
+}
+// show low stock products
+function handleLowStock(){
+  navigate("/products?filter=low-stock");
+}
+// Reset inventory
+function handleResetInventory() {
+  const confirmed = window.confirm("Reset inventory to default products");
 
+if (!confirmed) return;
+
+localStorage.removeItem("products");
+window.location.reload()
+}
+// Export inventory as CSV
+function handleExportInventory(){
+  const headers = [
+    "ID",
+    "Name",
+    "Category",
+    "Price",
+    "Stock",
+  ];
+  const rows = products.map((product) => [
+    product.id,
+    product.name,
+    product.category,
+    product.price,
+    product.stock,
+  ]);
+  const csvContent = [
+    headers.join(","),
+    ...rows.map((row) => row.join(","))
+  ].join("\n");
+  const blob = new Blob([csvContent], {
+    type: "text/csv;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "novamart-inventory.csv";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
   return (
     <AdminLayout>
       <h2 className="mb-4">Dashboard</h2>
+      <DashboardActions 
+      onAddProduct={handleAddProduct}
+      onLowStock={handleLowStock}
+      onExport={handleExportInventory}
+      onReset={handleResetInventory}
+      />
 
       {/* Main Statistics */}
       <div className="row g-4 mb-5">

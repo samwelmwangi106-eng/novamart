@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import productsData from "../Data/products.json";
+import { useSearchParams } from "react-router-dom";
 
 import AdminLayout from "../Layouts/AdminLayout";
 import ProductToolbar from "../Components/ProductToolbar";
@@ -10,9 +11,9 @@ import AlertMessage from "../Components/AlertMessage";
 import Pagination from "../Components/Pagination";
 
 function Products() {
-  // ----------------------------
+  // 
   // State
-  // ----------------------------
+  // 
 
   const [products, setProducts] = useState(() => {
     const savedProducts = localStorage.getItem("products");
@@ -24,6 +25,7 @@ function Products() {
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Categories");
+  const [sortBy, setSortBy] = useState("Newest")
 
   const [showModal, setShowModal] = useState(false);
 
@@ -40,9 +42,14 @@ function Products() {
 
   const productsPerPage = 5;
 
-  // ----------------------------
+  const [SearchParams] = useSearchParams();
+
+  const lowStckOnly = 
+  SearchParams.get("filter") === "low-stock"
+
+  // 
   // Local Storage
-  // ----------------------------
+  // 
 
   useEffect(() => {
     localStorage.setItem(
@@ -51,17 +58,17 @@ function Products() {
     );
   }, [products]);
 
-  // ----------------------------
+  // 
   // Reset page when searching
-  // ----------------------------
+  // 
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, category]);
+  }, [search, category, sortBy]);
 
-  // ----------------------------
+  // 
   // Alert Helper
-  // ----------------------------
+  // 
 
   function showAlert(type, message) {
     setAlert({
@@ -77,9 +84,9 @@ function Products() {
     }, 3000);
   }
 
-  // ----------------------------
+  // 
   // Reset Inventory
-  // ----------------------------
+  // 
 
   function resetProducts() {
     localStorage.removeItem("products");
@@ -92,9 +99,9 @@ function Products() {
     );
   }
 
-  // ----------------------------
+  // 
   // Modal Functions
-  // ----------------------------
+  // 
 
   function closeModal() {
     setShowModal(false);
@@ -115,9 +122,9 @@ function Products() {
     setProductToDelete(product);
   }
 
-  // ----------------------------
+  // 
   // Save Product
-  // ----------------------------
+  // 
 
   function saveProduct(productData) {
     // Edit Product
@@ -193,6 +200,8 @@ function Products() {
       ...products,
       newProduct,
     ]);
+    //Return first page
+    setCurrentPage(1);
 
     showAlert(
       "success",
@@ -202,9 +211,9 @@ function Products() {
     closeModal();
   }
 
-  // ----------------------------
+  // 
   // Delete Product
-  // ----------------------------
+  // 
 
   function confirmDelete() {
     if (!productToDelete) return;
@@ -218,6 +227,9 @@ function Products() {
 
     setProducts(updatedProducts);
 
+    // Return to first page
+    setCurrentPage(1);
+
     showAlert(
       "danger",
       "Product deleted successfully."
@@ -225,62 +237,89 @@ function Products() {
 
     setProductToDelete(null);
   }
+  // 
+// Search + Category Filter
+// 
 
-  // ----------------------------
-  // Search + Category Filter
-  // ----------------------------
+const filteredProducts = products.filter((product) => {
+  const matchesSearch = product.name
+    .toLowerCase()
+    .includes(search.toLowerCase());
 
-  const filteredProducts =
-    products.filter((product) => {
-      const matchesSearch =
-        product.name
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          );
+  const matchesCategory =
+    category === "All Categories" ||
+    product.category === category;
+  
+  const matchesLowStock = 
+  !lowStckOnly || product.stock <= 5;
 
-      const matchesCategory =
-        category ===
-          "All Categories" ||
-        product.category ===
-          category;
+  return (matchesSearch && matchesCategory && matchesLowStock);
+});
 
-      return (
-        matchesSearch &&
-        matchesCategory
-      );
-    });
+// 
+// Sort Products
+// 
 
-  // ----------------------------
-  // Pagination
-  // ----------------------------
+const sortedProducts = [...filteredProducts];
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(
-      filteredProducts.length /
-        productsPerPage
-    )
-  );
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
-
-  const indexOfLastProduct =
-    currentPage * productsPerPage;
-
-  const indexOfFirstProduct =
-    indexOfLastProduct -
-    productsPerPage;
-
-  const currentProducts =
-    filteredProducts.slice(
-      indexOfFirstProduct,
-      indexOfLastProduct
+switch (sortBy) {
+  case "Name A-Z":
+    sortedProducts.sort((a, b) =>
+      a.name.localeCompare(b.name)
     );
+    break;
+
+  case "Name Z-A":
+    sortedProducts.sort((a, b) =>
+      b.name.localeCompare(a.name)
+    );
+    break;
+
+  case "Price Low-High":
+    sortedProducts.sort((a, b) => a.price - b.price);
+    break;
+
+  case "Price High-Low":
+    sortedProducts.sort((a, b) => b.price - a.price);
+    break;
+
+  case "Highest Stock":
+    sortedProducts.sort((a, b) => b.stock - a.stock);
+    break;
+
+  case "Lowest Stock":
+    sortedProducts.sort((a, b) => a.stock - b.stock);
+    break;
+
+  default:
+    // Newest first
+    sortedProducts.sort((a, b) => b.id - a.id);
+}
+
+// 
+// Pagination
+// 
+
+const totalPages = Math.max(
+  1,
+  Math.ceil(sortedProducts.length / productsPerPage)
+);
+
+useEffect(() => {
+  if (currentPage > totalPages) {
+    setCurrentPage(totalPages);
+  }
+}, [currentPage, totalPages]);
+
+const indexOfLastProduct = currentPage * productsPerPage;
+const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
+const currentProducts = sortedProducts.slice(
+  indexOfFirstProduct,
+  indexOfLastProduct
+);
+
+  
       return (
     <AdminLayout>
       <h2 className="mb-4">Products</h2>
@@ -303,6 +342,8 @@ function Products() {
         setSearch={setSearch}
         category={category}
         setCategory={setCategory}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
         openModal={openAddModal}
       />
 
