@@ -6,6 +6,7 @@ import Cart from './Pages/Cart'
 import Contact from './Pages/Contact'
 import Home from './Pages/Home'
 import Dashboard from './Pages/Dashboard'
+import Orders from "./Pages/Orders"
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         <Route path='/cart' element={<Cart />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        
+        <Route path='/orders' element={<Orders/>}></Route>
 
 
       </Routes>

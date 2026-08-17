@@ -3,21 +3,21 @@
     "id": 1001,
     "customer": "John Kamau",
     "product": "iPhone 15 Pro",
-    "status": "Delivered",
+    "status": "Pending",
     "total": 1200
   },
   {
     "id": 1002,
     "customer": "Mary Wanjiku",
     "product": "Nike Air Max",
-    "status": "Pending",
+    "status": "Processing",
     "total": 150
   },
   {
     "id": 1003,
     "customer": "Brian Otieno",
     "product": "Johnnie Walker Black",
-    "status": "Processing",
+    "status": "Shipped",
     "total": 45
   },
   {
@@ -31,15 +31,7 @@
     "id": 1005,
     "customer": "Mary Wanjiku",
     "product": "Nike Air Max",
-    "status": "Pending",
+    "status": "Cancelled",
     "total": 150
-  },
-  {
-    "id": 1006,
-    "customer": "Brian Otieno",
-    "product": "Johnnie Walker Black",
-    "status": "Processing",
-    "total": 45
   }
-
 ]
