@@ -1,5 +1,9 @@
-import React from "react";
 import StatusBadge from "./StatusBadge";
+import {
+  FaEye,
+  FaEdit,
+  FaShoppingCart,
+} from "react-icons/fa";
 
 function OrderTable({
   orders,
@@ -7,69 +11,151 @@ function OrderTable({
   onChangeStatus,
 }) {
   return (
-    <table className="table table-hover align-middle">
-      <thead className="table-dark">
-        <tr>
-          <th>ID</th>
-          <th>Customer</th>
-          <th>Product</th>
-          <th>Status</th>
-          <th>Total</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+    <div className="card border-0 shadow-sm">
+      <div className="card-body p-0">
 
-      <tbody>
-        {orders.length === 0 ? (
-          <tr>
-            <td
-              colSpan="6"
-              className="text-center py-4"
-            >
-              No orders found.
-            </td>
-          </tr>
-        ) : (
-          orders.map((order) => (
-            <tr key={order.id}>
-              <td>{order.id}</td>
+        <div className="table-responsive">
+          <table className="table table-hover align-middle mb-0">
 
-              <td>{order.customer}</td>
+            {/* Header */}
+            <thead className="table-dark">
+              <tr>
+                <th className="px-3 py-3">
+                  Order ID
+                </th>
 
-              <td>{order.product}</td>
+                <th className="py-3">
+                  Customer
+                </th>
 
-              <td>
-                <StatusBadge
-                  status={order.status}
-                />
-              </td>
+                <th className="py-3">
+                  Product
+                </th>
 
-              <td>${order.total}</td>
+                <th className="py-3">
+                  Status
+                </th>
 
-              <td>
-                <button
-                  className="btn btn-primary btn-sm me-2"
-                  onClick={() =>
-                    onView(order)
-                  }
-                >
-                  View
-                </button>
+                <th className="py-3">
+                  Total
+                </th>
 
-                <button
-                  className="btn btn-warning btn-sm"
-                  onClick={() =>
-                    onChangeStatus(order)
-                  }
-                >
-                  Change Status
-                </button>
-              </td>
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
+                <th className="py-3">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            {/* Body */}
+            <tbody>
+
+              {orders.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-center text-muted py-5"
+                  >
+                    <FaShoppingCart
+                      size={35}
+                      className="mb-3"
+                    />
+
+                    <div className="fw-semibold">
+                      No orders found
+                    </div>
+
+                    <small>
+                      Try changing your search
+                      or status filter.
+                    </small>
+                  </td>
+                </tr>
+              ) : (
+                orders.map((order) => (
+                  <tr key={order.id}>
+
+                    {/* ID */}
+                    <td className="px-3">
+                      <span className="fw-semibold">
+                        #{order.id}
+                      </span>
+                    </td>
+
+                    {/* Customer */}
+                    <td>
+                      <div className="fw-semibold">
+                        {order.customer}
+                      </div>
+                    </td>
+
+                    {/* Product */}
+                    <td>
+                      <span className="text-muted">
+                        {order.product}
+                      </span>
+                    </td>
+
+                    {/* Status */}
+                    <td>
+                      <StatusBadge
+                        status={order.status}
+                      />
+                    </td>
+
+                    {/* Total */}
+                    <td>
+                      <span className="fw-bold text-success">
+                        $
+                        {Number(
+                          order.total
+                        ).toLocaleString()}
+                      </span>
+                    </td>
+
+                    {/* Actions */}
+                    <td>
+                      <div className="d-flex gap-2">
+
+                        {/* View */}
+                        <button
+                          type="button"
+                          className="btn btn-outline-primary btn-sm"
+                          title="View Order"
+                          onClick={() =>
+                            onView &&
+                            onView(order)
+                          }
+                        >
+                          <FaEye />
+                        </button>
+
+                        {/* Change Status */}
+                        <button
+                          type="button"
+                          className="btn btn-outline-warning btn-sm"
+                          title="Change Status"
+                          onClick={() =>
+                            onChangeStatus &&
+                            onChangeStatus(order)
+                          }
+                        >
+                          <FaEdit />
+                        </button>
+
+                      </div>
+                    </td>
+
+                  </tr>
+                ))
+              )}
+
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+    </div>
   );
 }
 

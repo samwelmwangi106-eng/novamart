@@ -5,9 +5,10 @@ import DashboardCard from "../Components/DashboardCard";
 import StatCard from "../Components/StatCard";
 import RecentOrders from "../Components/RecentOrders";
 import InventorySummary from "../Components/InventorySummary";
-
+import OrderStatusChart from "../Components/OrderStatusChart";
+import OrderAnalytics from "../Components/OrderAnalytics";
 import productsData from "../Data/products.json";
-import orders from "../Data/orders.json";
+import ordersData from "../Data/orders.json";
 import users from "../Data/users.json";
 import DashboardActions from "../Components/DashboardActions";
 import { useNavigate } from "react-router-dom";
@@ -43,6 +44,30 @@ function Dashboard() {
   };
 }, []);
 
+const [orders, setOrders] = useState(() => {
+  const savedOrders = localStorage.getItem("orders");
+
+  return savedOrders 
+  ? JSON.parse(savedOrders)
+  : ordersData;
+});
+useEffect(() => {
+  const handleStorageChange = () => {
+    const savedOrders = localStorage.getItem("orders");
+
+    if (savedOrders) {
+      setOrders(JSON.parse(savedOrders));
+    }
+  };
+  window.addEventListener(
+    "storage",
+    handleStorageChange
+  );
+
+  return () => {
+    window.removeEventListener("storage", handleStorageChange);
+  };
+}, []);
   // Dashboard Statistics
   const totalProducts = products.length;
 
@@ -198,6 +223,8 @@ function handleExportInventory(){
         inventoryValue={inventoryValue}
         lowStockProducts={lowStockProducts}
       />
+      <OrderAnalytics orders={orders} />
+      <OrderStatusChart orders={orders} />
       <div className="mt-4">
           <ProductsChart
           products={products}

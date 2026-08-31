@@ -1,6 +1,17 @@
 import { useState, useEffect } from "react";
+import {
+  FaBox,
+  FaTag,
+  FaDollarSign,
+  FaBoxes,
+  FaImage,
+} from "react-icons/fa";
 
-function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
+function AddProductForm({
+  onAddProduct,
+  onCancel,
+  initialProduct,
+}) {
   const isEditing = Boolean(initialProduct);
 
   const [name, setName] = useState("");
@@ -9,13 +20,27 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
   const [stock, setStock] = useState("");
   const [image, setImage] = useState("");
 
+ 
+  // Load product when editing
+ 
+
   useEffect(() => {
     if (initialProduct) {
-      setImage(initialProduct?.image || "");
-      setName(initialProduct.name);
-      setCategory(initialProduct.category);
-      setPrice(String(initialProduct.price));
-      setStock(String(initialProduct.stock));
+      setName(initialProduct.name || "");
+      setCategory(
+        initialProduct.category || "Electronics"
+      );
+      setPrice(
+        initialProduct.price !== undefined
+          ? String(initialProduct.price)
+          : ""
+      );
+      setStock(
+        initialProduct.stock !== undefined
+          ? String(initialProduct.stock)
+          : ""
+      );
+      setImage(initialProduct.image || "");
     } else {
       setName("");
       setCategory("Electronics");
@@ -25,11 +50,26 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
     }
   }, [initialProduct]);
 
+ 
+  // Submit
+ 
+
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!name.trim() || !price || !stock) {
-      alert("Please fill in all fields.");
+    // Basic validation
+    if (!name.trim()) {
+      alert("Please enter a product name.");
+      return;
+    }
+
+    if (!price || Number(price) <= 0) {
+      alert("Please enter a valid price.");
+      return;
+    }
+
+    if (stock === "" || Number(stock) < 0) {
+      alert("Please enter a valid stock quantity.");
       return;
     }
 
@@ -38,9 +78,10 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
       category,
       price: Number(price),
       stock: Number(stock),
-      image,
+      image: image.trim(),
     };
 
+    // Preserve ID when editing
     if (isEditing) {
       productData.id = initialProduct.id;
     }
@@ -50,71 +91,163 @@ function AddProductForm({ onAddProduct, onCancel, initialProduct }) {
 
   return (
     <form onSubmit={handleSubmit}>
+
+      {/* Product Name */}
       <div className="mb-3">
-        <label className="form-label">Product Name</label>
-        <input
-          className="form-control"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
+        <label className="form-label fw-semibold">
+          Product Name
+        </label>
+
+        <div className="input-group">
+          <span className="input-group-text bg-light">
+            <FaBox className="text-muted" />
+          </span>
+
+          <input
+            type="text"
+            className="form-control"
+            placeholder="e.g. iPhone 15 Pro"
+            value={name}
+            onChange={(event) =>
+              setName(event.target.value)
+            }
+          />
+        </div>
       </div>
 
+      {/* Category */}
       <div className="mb-3">
-        <label className="form-label">Category</label>
-        <select
-          className="form-select"
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-        >
-          <option>Electronics</option>
-          <option>Fashion</option>
-          <option>Liquor</option>
-        </select>
+        <label className="form-label fw-semibold">
+          Category
+        </label>
+
+        <div className="input-group">
+          <span className="input-group-text bg-light">
+            <FaTag className="text-muted" />
+          </span>
+
+          <select
+            className="form-select"
+            value={category}
+            onChange={(event) =>
+              setCategory(event.target.value)
+            }
+          >
+            <option value="Electronics">
+              Electronics
+            </option>
+
+            <option value="Fashion">
+              Fashion
+            </option>
+
+            <option value="Liquor">
+              Liquor
+            </option>
+          </select>
+        </div>
       </div>
 
+      {/* Price */}
       <div className="mb-3">
-        <label className="form-label">Price</label>
-        <input
-          type="number"
-          className="form-control"
-          value={price}
-          onChange={(event) => setPrice(event.target.value)}
-        />
+        <label className="form-label fw-semibold">
+          Price
+        </label>
+
+        <div className="input-group">
+          <span className="input-group-text bg-light">
+            <FaDollarSign className="text-muted" />
+          </span>
+
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            className="form-control"
+            placeholder="0.00"
+            value={price}
+            onChange={(event) =>
+              setPrice(event.target.value)
+            }
+          />
+        </div>
       </div>
 
+      {/* Stock */}
       <div className="mb-3">
-        <label className="form-label">Stock</label>
-        <input
-          type="number"
-          className="form-control"
-          value={stock}
-          onChange={(event) => setStock(event.target.value)}
-        />
+        <label className="form-label fw-semibold">
+          Stock Quantity
+        </label>
+
+        <div className="input-group">
+          <span className="input-group-text bg-light">
+            <FaBoxes className="text-muted" />
+          </span>
+
+          <input
+            type="number"
+            min="0"
+            className="form-control"
+            placeholder="e.g. 25"
+            value={stock}
+            onChange={(event) =>
+              setStock(event.target.value)
+            }
+          />
+        </div>
       </div>
-      <div className="mb-3">
-        <label className="form-label">Image URL</label>
-        <input 
-        type="text"
-        className="form-control"
-        placeholder="/images/product.jpg"
-        value={image}
-        onChange={(event) => setImage(event.target.value)}
 
+      {/* Image URL */}
+      <div className="mb-4">
+        <label className="form-label fw-semibold">
+          Product Image URL
+        </label>
 
-        />
+        <div className="input-group">
+          <span className="input-group-text bg-light">
+            <FaImage className="text-muted" />
+          </span>
 
+          <input
+            type="text"
+            className="form-control"
+            placeholder="/images/product.jpg"
+            value={image}
+            onChange={(event) =>
+              setImage(event.target.value)
+            }
+          />
+        </div>
+
+        <small className="text-muted">
+          Enter the path or URL of the product image.
+        </small>
       </div>
 
-      <div className="d-flex gap-2 justify-content-end">
+      {/* Buttons */}
+      <div className="d-flex justify-content-end gap-2">
+
         {onCancel && (
-          <button type="button" className="btn btn-secondary" onClick={onCancel}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onCancel}
+          >
             Cancel
           </button>
         )}
-        <button type="submit" className="btn btn-primary">
-          {isEditing ? "Update Product" : "Add Product"}
+
+        <button
+          type="submit"
+          className="btn btn-primary px-4"
+        >
+          {isEditing
+            ? "Update Product"
+            : "Add Product"}
         </button>
+
       </div>
+
     </form>
   );
 }

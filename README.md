@@ -1,16 +1,56 @@
-# React + Vite
+# 🛒 NovaMart
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+NovaMart is a modern e-commerce web application built with React and Vite for the Kenyan market.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- User registration and login
+- Authentication and protected routes
+- Product browsing
+- Product search
+- Product categories
+- Product details
+- Shopping cart
+- Add to Cart
+- Buy Now
+- Wishlist
+- Checkout
+- Order management
+- User profiles
+- Admin dashboard
+- Product management
+- Responsive design
+- Dark mode
+- Kenyan Shilling (KES) currency formatting
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- React Router
+- Redux Toolkit
+- Tailwind CSS
+- JavaScript
+- Jest
+- React Testing Library
+- ESLint
+- REST API
+- Git & GitHub
 
-## Expanding the ESLint configuration
+## 📁 Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+novamart/
+├── public/
+├── src/
+│   ├── components/
+│   ├── features/
+│   ├── pages/
+│   ├── services/
+│   ├── store/
+│   ├── App.jsx
+│   └── main.jsx
+├── .gitignore
+├── package.json
+├── vite.config.js
+└── README.md

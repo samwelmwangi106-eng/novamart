@@ -3,14 +3,15 @@ import AdminLayout from "../Layouts/AdminLayout";
 import OrderToolbar from "../Components/OrderToolbar";
 import OrderTable from "../Components/OrderTable";
 import OrderDetailsModal from "../Components/OrderDetailsModal";
+import OrderAnalytics from "../Components/OrderAnalytics";
 import Modal from "../Components/Modal";
 
 import ordersData from "../Data/orders.json";
 
 function Orders() {
-  // -----------------------------
+ 
   // State
-  // -----------------------------
+ 
 
   const [orders, setOrders] = useState(() => {
     const savedOrders = localStorage.getItem("orders");
@@ -28,9 +29,9 @@ function Orders() {
   const [statusOrder, setStatusOrder] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
 
-  // -----------------------------
+ 
   // Save to Local Storage
-  // -----------------------------
+ 
 
   useEffect(() => {
     localStorage.setItem(
@@ -39,29 +40,38 @@ function Orders() {
     );
   }, [orders]);
 
-  // -----------------------------
-  // Search + Filter
-  // -----------------------------
+ 
+// Search + Filter
 
-  const filteredOrders = orders.filter((order) => {
-    const matchesSearch =
-      order.customer
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      order.product
-        .toLowerCase()
-        .includes(search.toLowerCase());
 
-    const matchesStatus =
-      status === "All" ||
-      order.status === status;
+const filteredOrders = orders.filter((order) => {
+  const searchTerm = search
+    .toLowerCase()
+    .trim();
 
-    return matchesSearch && matchesStatus;
-  });
+  const matchesSearch =
+    String(order.customer || "")
+      .toLowerCase()
+      .includes(searchTerm) ||
+    String(order.product || "")
+      .toLowerCase()
+      .includes(searchTerm) ||
+    String(order.id || "")
+      .includes(searchTerm) ||
+    String(order.status || "")
+      .toLowerCase()
+      .includes(searchTerm);
 
-  // -----------------------------
+  const matchesStatus =
+    status === "All" ||
+    order.status === status;
+
+  return matchesSearch && matchesStatus;
+});
+
+ 
   // Update Status
-  // -----------------------------
+ 
 
   function updateOrderStatus(orderId, newStatus) {
     const updatedOrders = orders.map((order) =>
@@ -76,9 +86,9 @@ function Orders() {
     setOrders(updatedOrders);
   }
 
-  // -----------------------------
+ 
   // View Details Modal
-  // -----------------------------
+ 
 
   function openViewModal(order) {
     setViewOrder(order);
@@ -88,9 +98,9 @@ function Orders() {
     setViewOrder(null);
   }
 
-  // -----------------------------
+ 
   // Status Modal
-  // -----------------------------
+ 
 
   function openStatusModal(order) {
     setStatusOrder(order);
@@ -121,6 +131,7 @@ function Orders() {
         status={status}
         setStatus={setStatus}
       />
+      <OrderAnalytics orders={orders} />
 
       <OrderTable
         orders={filteredOrders}

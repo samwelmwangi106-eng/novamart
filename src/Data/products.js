@@ -1,0 +1,34 @@
+export const products = [
+  {
+    id: '1',
+    name: 'Wireless Noise-Canceling Headphones',
+    price: 199.99,
+    category: 'Audio',
+    description: 'Premium sound with 40-hour battery life and memory foam comfort.',
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: '2',
+    name: 'Mechanical Gaming Keyboard',
+    price: 129.50,
+    category: 'Electronics',
+    description: 'Custom tactile switches, RGB lighting, and solid aluminum frame.',
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: '3',
+    name: 'Leather Everyday Backpack',
+    price: 149.00,
+    category: 'Accessories',
+    description: 'Water-resistant genuine leather with 16-inch laptop compartment.',
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: '4',
+    name: 'Smart Fitness Watch',
+    price: 249.99,
+    category: 'Electronics',
+    description: 'Heart rate tracker, GPS, sleep monitor, and waterproof display.',
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80',
+  },
+];

@@ -1,22 +1,21 @@
-import React from 'react'
-
 function StatusBadge({ status }) {
-  let color = "secondary";
+  const statusColors = {
+    Pending: "warning",
+    Processing: "primary",
+    Shipped: "info",
+    Delivered: "success",
+    Cancelled: "danger",
+  };
 
-  if (status === "Pending") {
-    color = "warning";
-  } else if (status === "Processing") {
-    color = "primary";
-  } else if (status === "Delivered") {
-    color = "success";
-  } else if (status === "Cancelled") {
-    color = "danger";
-  }
+  const color = statusColors[status] || "secondary";
 
   return (
-    <span className={`badge bg-${color}`}>
+    <span
+      className={`badge bg-${color} px-3 py-2`}
+    >
       {status}
     </span>
   );
 }
-export default StatusBadge
+
+export default StatusBadge;
